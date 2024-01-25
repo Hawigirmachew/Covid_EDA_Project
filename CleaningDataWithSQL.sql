@@ -104,13 +104,27 @@ SET SoldAsVacant =
 	END
 
 
---Remove Duplicates - use Window function to find dublications
-WITH RemoveDuplicates As(
-SELECT *
-FROM dbo.NashvilleHousingData)
+-- dropping column
+ALTER TABLE dbo.NashvilleHousingData
+DROP COLUMN OwnerAddress, PropertyAddress
 
+--removing rows which have null value in the table
+DELETE FROM dbo.NashvilleHousingData
+Where OwnerName is null
 
-select * from dbo.NashvilleHousingData
+DELETE FROM dbo.NashvilleHousingData
+Where YearBuilt is null
+
+-- replacing null values by 0
+select FullBath, HalfBath, ISNULL(FullBath, 0), ISNULL(HalfBath, 0)
+from dbo.NashvilleHousingData
+where FullBath is null or HalfBath is null
+
+Update dbo.NashvilleHousingData
+SET FullBath =  ISNULL(FullBath, 0)
+
+Update dbo.NashvilleHousingData
+SET HalfBath =  ISNULL(FullBath, 0)
 
 
 
